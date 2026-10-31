@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html lang="en" id="top">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jaylen Xiong — Engineering × Tech × Business</title>
+<meta name="description" content="Jaylen Xiong — Guangdong Experimental High School AP, Grade 12. A builder working across hardware, software, and quantitative thinking: UWB auto-following cart, homework-billing app, and community inclusion system.">
+<!-- Open Graph（预留，上线后填充真实域名/图片） -->
+<meta property="og:title" content="Jaylen Xiong — Engineering × Tech × Business">
+<meta property="og:description" content="Personal portfolio: engineering, software, and quantitative work with verifiable evidence.">
+<meta property="og:type" content="website">
+<style>
+/* ============================================================
+   设计令牌（Design Tokens）——来源：设计规范 §2，全部用 CSS 变量管理
+   ============================================================ */
+:root {
+  /* 色彩 */
+  --bg-base: #F5F8FC;
+  --bg-elevated: #FFFFFF;
+  --bg-surface: #EEF2F7;
+  --bg-surface-hover: #E3EAF2;
+  --text-primary: #1E293B;
+  --text-secondary: #475569;
+  --text-muted: #5B6B7E;
+  --accent: #2563EB;
+  --accent-dim: #DBEAFE;
+  --accent-bright: #1E40AF;
+  --border: #DCE3ED;
+  --border-strong: #B9C4D4;
+  --success: #15803D;
+  --warning: #92400E;
+  --danger: #B91C1C;
+  --accent-warm: #EA580C;
+
+  /* 派生透明色 / 纯色 */
+  --white: #FFFFFF;
+  --black: #000000;
+  --on-accent: #FFFFFF;
+  --overlay: rgba(248,250,252,0.92);
+  --base-45: rgba(15,23,42,0.40);
+  --accent-18: rgba(37,99,235,0.18);
+  --accent-4: rgba(37,99,235,0.05);
+  --border-55: rgba(148,163,184,0.45);
+  --success-35: rgba(21,128,61,0.35);
+  --danger-35: rgba(185,28,28,0.35);
+  --warning-35: rgba(146,64,14,0.35);
+  --warning-55: rgba(146,64,14,0.5);
+
+  /* 字体栈 */
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+
+  /* 字阶 */
+  --fs-h1: 44px; --lh-h1: 1.15;
+  --fs-h2: 28px; --lh-h2: 1.3;
+  --fs-h3: 18px; --lh-h3: 1.45;
+  --fs-body: 16px; --lh-body: 1.7;
+  --fs-small: 14px; --lh-small: 1.65;
+  --fs-caption: 13px; --lh-caption: 1.5;
+  --fs-label: 12px; --lh-label: 1;
+
+  /* 间距 */
+  --sp-4: 4px; --sp-8: 8px; --sp-12: 12px; --sp-16: 16px;
+  --sp-24: 24px; --sp-32: 32px; --sp-48: 48px; --sp-64: 64px;
+  --sp-96: 96px; --sp-128: 128px;
+
+  /* 圆角 */
+  --radius-card: 8px;
+  --radius-control: 4px;
+
+  /* 阴影层级 */
+  --shadow-card: 0 1px 2px rgba(15,23,42,0.05), 0 1px 3px rgba(15,23,42,0.04);
+  --shadow-hover: 0 6px 16px rgba(15,23,42,0.12);
+  --shadow-float: 0 20px 50px rgba(15,23,42,0.22);
+
+  --nav-h: 56px;
+}
+
+/* ============================================================
+   基础与重置
+   ============================================================ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-h) + 16px);
+  color-scheme: light;
+}
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-wrap: break-word;
+}
+img { display: block; max-width: 100%; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-bright); }
+button { font-family: inherit; cursor: pointer; }
+ul { list-style: none; }
+
+h1, h2, h3, h4 { font-family: var(--font-mono); font-weight: 600; }
+h1 { font-size: var(--fs-h1); line-height: var(--lh-h1); letter-spacing: -0.02em; }
+h2 { font-size: var(--fs-h2); line-height: var(--lh-h2); }
+h3 { font-size: var(--fs-h3); line-height: var(--lh-h3); font-weight: 500; }
+
+/* 中文排版覆盖：标题/标签改无衬线，去大写、去字距（设计规范 §7） */
+.lang-zh h1, .lang-zh h2, .lang-zh h3, .lang-zh h4 { font-family: var(--font-sans); }
+.lang-zh body { line-height: 1.75; }
+.lang-zh .tag, .lang-zh .eyebrow, .lang-zh .nav-link, .lang-zh .num { font-family: var(--font-sans); letter-spacing: 0; text-transform: none; }
+
+/* 焦点环（可访问性） */
+:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--bg-base), 0 0 0 4px var(--accent); border-radius: 2px; }
+
+/* skip link：默认隐藏，聚焦显形（可访问性） */
+.skip { position: absolute; left: -9999px; top: 0; }
+.skip:focus { left: 20px; top: 16px; z-index: 200; background: var(--bg-surface); padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--radius-control); color: var(--text-primary); }
+
+/* ============================================================
+   布局助手
+   ============================================================ */
+.container { width: 100%; max-width: 1120px; margin-inline: auto; padding-inline: 20px; }
+.section { padding-block: var(--sp-48); }
+.section.section--opener { padding-top: var(--nav-h); }
+.section-head { margin-bottom: var(--sp-32); }
+.eyebrow {
+  display: inline-block; font-family: var(--font-mono);
+  font-size: var(--fs-label); line-height: var(--lh-label);
+  letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: var(--sp-8);
+}
+.section-head h2 { color: var(--text-primary); }
+.section-note { color: var(--text-muted); font-size: var(--fs-caption); line-height: var(--lh-caption); margin-top: var(--sp-8); }
+
+/* ============================================================
+   导航栏（PRD §5.4 + 设计规范骨架 #1）
+   ============================================================ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  height: var(--nav-h);
+  background: var(--bg-base);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner { display: flex; align-items: center; justify-content: space-between; height: 100%; }
+.logo {
+  font-family: var(--font-mono); font-weight: 600; font-size: var(--fs-body);
+  color: var(--text-primary);
+}
+.logo .prompt { color: var(--accent); margin-right: 2px; }
+.logo:hover { color: var(--text-primary); }
+.nav-links { display: flex; align-items: center; gap: var(--sp-24); }
+.nav-link {
+  font-family: var(--font-mono); font-size: var(--fs-small); color: var(--text-secondary);
+  background: none; border: none; padding: 4px 0;
+}
+.nav-link:hover { color: var(--text-primary); }
+.nav-link.active { color: var(--accent); }
+
+.lang-toggle {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-mono); font-size: var(--fs-label); letter-spacing: 0.08em;
+  color: var(--text-secondary); background: var(--bg-surface);
+  border: 1px solid var(--border); border-radius: var(--radius-control);
+  padding: 6px 10px; white-space: nowrap;
+}
+.lang-toggle:hover { border-color: var(--border-strong); color: var(--text-primary); }
+.lang-toggle .opt { color: var(--text-muted); }
+.lang-toggle .opt.active { color: var(--accent); }
+.lang-sep { color: var(--border-strong); }
+
+.hamburger {
+  display: none; background: none; border: 1px solid var(--border);
+  border-radius: var(--radius-control); color: var(--text-primary);
+  padding: 6px 8px; align-items: center; justify-content: center;
+}
+
+/* ============================================================
+   Hero 首屏（PRD §5.5 + 内容清单 §1 + 骨架 #2）
+   ============================================================ */
+.hero {
+  position: relative;
+  padding-block: var(--sp-96);
+  border-bottom: 1px solid var(--border);
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 39px, var(--border-55) 39px, var(--border-55) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, var(--accent-4) 39px, var(--accent-4) 40px);
+}
+.hero-eyebrow { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--accent); margin-bottom: var(--sp-24); }
+.hero-name { color: var(--text-primary); }
+.hero-name .cursor { color: var(--accent); animation: blink 2s steps(1) infinite; font-weight: 400; }
+@keyframes blink { 50% { opacity: 0; } }
+.hero-tagline { font-size: var(--fs-h3); line-height: var(--lh-h3); color: var(--text-secondary); max-width: 60ch; margin-top: var(--sp-16); }
+.hero-school { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); margin-top: var(--sp-12); }
+.hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-16); margin-top: var(--sp-48); max-width: 560px; }
+.stat-card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-card); padding: var(--sp-24); box-shadow: var(--shadow-card); }
+.stat-value { font-family: var(--font-mono); font-size: var(--fs-h2); line-height: 1; color: var(--accent-warm); display: block; }
+.stat-label { font-family: var(--font-mono); font-size: var(--fs-label); letter-spacing: 0.08em; color: var(--text-muted); margin-top: var(--sp-8); display: block; }
+.hero-cta { display: inline-block; margin-top: var(--sp-48); }
+
+/* Hero 两栏：左文字 / 右照片 */
+.hero-grid { display: grid; grid-template-columns: 1fr; gap: var(--sp-32); }
+.hero-photo { justify-self: center; }
+.hero-photo img { width: 100%; max-width: 320px; height: auto; display: block; border: 1px solid var(--border); border-radius: var(--radius-card); }
+
+/* 按钮 */
+.btn {
+  display: inline-block; font-family: var(--font-mono); font-size: var(--fs-small); font-weight: 600;
+  color: var(--on-accent); background: var(--accent); border: 1px solid var(--accent);
+  border-radius: var(--radius-control); padding: 12px 24px;
+}
+.btn:hover { background: var(--accent-bright); border-color: var(--accent-bright); color: var(--on-accent); }
+
+/* ============================================================
+   标签 / 占位 / 证据链接
+   ============================================================ */
+.tag {
+  display: inline-block; font-family: var(--font-mono); font-size: var(--fs-label);
+  letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.4;
+  color: var(--text-secondary); background: var(--bg-surface);
+  border: 1px solid var(--border); border-radius: var(--radius-control);
+  padding: 4px 8px; margin-bottom: var(--sp-12);
+}
+.tag--success { color: var(--success); border-color: var(--success-35); }
+.tag--danger { color: var(--danger); border-color: var(--danger-35); }
+.tag--warning { color: var(--warning); border-color: var(--warning-35); }
+
+.placeholder {
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--warning);
+  border: 1px dashed var(--warning-55); border-radius: var(--radius-control);
+  background: var(--bg-surface); padding: var(--sp-24);
+}
+.evidence { display: inline-flex; flex-wrap: wrap; gap: var(--sp-12); margin-top: var(--sp-16); }
+.evidence a, .evidence button {
+  font-family: var(--font-mono); font-size: var(--fs-label); letter-spacing: 0.08em;
+  color: var(--accent); background: var(--accent-dim); border: 1px solid var(--border);
+  border-radius: var(--radius-control); padding: 6px 10px;
+}
+.evidence a:hover, .evidence button:hover { color: var(--accent-bright); border-color: var(--border-strong); }
+
+/* ============================================================
+   About（PRD §4 + 内容清单 §2 + 骨架 #3）
+   ============================================================ */
+.about-intro { color: var(--text-secondary); font-size: var(--fs-body); max-width: 68ch; }
+.about-photo { margin-top: var(--sp-48); max-width: 520px; }
+.about-photo-thumb { display: block; width: 100%; padding: 0; border: 1px solid var(--border); border-radius: var(--radius-card); overflow: hidden; cursor: zoom-in; background: var(--bg-surface); }
+.about-photo-thumb img { width: 100%; height: auto; display: block; }
+.about-photo-cap { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); margin-top: var(--sp-12); }
+.about-block { margin-top: var(--sp-48); }
+.about-block h3 { color: var(--text-primary); margin-bottom: var(--sp-16); }
+.curve { width: 100%; height: 140px; margin-top: var(--sp-16); }
+.curve-nodes { display: flex; justify-content: space-between; gap: var(--sp-16); margin-top: var(--sp-8); }
+.curve-node { flex: 1; }
+.curve-node .n-title { font-family: var(--font-mono); font-size: var(--fs-small); color: var(--text-primary); }
+.curve-node .n-desc { font-size: var(--fs-caption); color: var(--text-muted); margin-top: 4px; }
+.nums-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--sp-16); }
+.num-card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-card); padding: var(--sp-16); box-shadow: var(--shadow-card); }
+.num-card .num-value { font-family: var(--font-mono); font-size: var(--fs-h2); line-height: 1; color: var(--accent-warm); display: block; }
+.num-card .num-label { font-family: var(--font-mono); font-size: var(--fs-label); letter-spacing: 0.08em; color: var(--text-muted); margin-top: var(--sp-8); display: block; }
+.about-story { color: var(--text-secondary); max-width: 68ch; }
+
+/* ============================================================
+   Projects（PRD §5.6 + 内容清单 §3 + 骨架 #4）
+   ============================================================ */
+.projects-grid { display: grid; grid-template-columns: 1fr; gap: var(--sp-24); }
+.project-card {
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  border-radius: var(--radius-card); overflow: hidden;
+  box-shadow: var(--shadow-card);
+  display: flex; flex-direction: column;
+}
+.project-card:hover { border-color: var(--border-strong); box-shadow: 0 0 0 1px var(--accent-18); }
+.project-cover { aspect-ratio: 16 / 9; background: var(--bg-surface); overflow: hidden; position: relative; }
+.project-cover img { width: 100%; height: 100%; object-fit: cover; }
+.project-body { padding: var(--sp-24); display: flex; flex-direction: column; flex: 1; }
+.project-num { font-family: var(--font-mono); font-size: var(--fs-label); letter-spacing: 0.08em; color: var(--accent); }
+.project-title { margin: var(--sp-8) 0 var(--sp-8); }
+.project-desc { color: var(--text-secondary); font-size: var(--fs-small); flex: 1; }
+.project-meta { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); margin-top: var(--sp-12); }
+
+/* ============================================================
+   Research（PRD §5.7 + 内容清单 §4 + 骨架 #5）
+   ============================================================ */
+.research-item { display: flex; flex-direction: column; gap: var(--sp-16); padding: var(--sp-32); background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-card); box-shadow: var(--shadow-card); }
+.research-item + .research-item { margin-top: var(--sp-24); }
+.research-index { font-family: var(--font-mono); font-size: var(--fs-label); letter-spacing: 0.08em; color: var(--accent); }
+.research-title { color: var(--text-primary); }
+.research-venue { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); margin-top: var(--sp-8); }
+.research-abstract { color: var(--text-secondary); font-size: var(--fs-small); max-width: 68ch; margin-top: var(--sp-12); }
+
+/* ============================================================
+   Awards（PRD §5.8 + 内容清单 §5 + 骨架 #6）
+   ============================================================ */
+.awards-grid { display: grid; grid-template-columns: 1fr; gap: var(--sp-24); }
+.award-item { display: flex; flex-direction: column; }
+.award-thumb {
+  aspect-ratio: 4 / 3; background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--radius-control); padding: 8px; overflow: hidden;
+  box-shadow: var(--shadow-card);
+  display: block; width: 100%; cursor: zoom-in;
+}
+.award-thumb:hover { border-color: var(--border-strong); }
+.award-thumb img { width: 100%; height: 100%; object-fit: contain; border-radius: 2px; }
+.award-cap { margin-top: var(--sp-12); }
+.award-name { font-size: var(--fs-small); color: var(--text-primary); font-weight: 500; }
+.award-year { font-family: var(--font-mono); font-size: var(--fs-label); letter-spacing: 0.08em; color: var(--warning); }
+
+/* ============================================================
+   Internship（内容清单 §6 + 骨架 #7）
+   ============================================================ */
+.internship-grid { display: grid; grid-template-columns: 1fr; gap: var(--sp-24); }
+.internship-card { padding: var(--sp-32); background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-card); box-shadow: var(--shadow-card); }
+.internship-title { margin-top: var(--sp-8); }
+.internship-duty { color: var(--text-secondary); font-size: var(--fs-small); margin-top: var(--sp-12); max-width: 68ch; }
+
+/* ============================================================
+   Leadership（内容清单 §8 + 骨架 #9）
+   ============================================================ */
+.leadership-list { display: flex; flex-direction: column; gap: var(--sp-16); }
+.leadership-item { padding: var(--sp-24); background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-card); box-shadow: var(--shadow-card); }
+.leadership-item .num { font-family: var(--font-mono); font-size: var(--fs-label); letter-spacing: 0.08em; color: var(--accent); }
+.leadership-item h3 { margin-top: var(--sp-8); }
+.leadership-item p { color: var(--text-secondary); font-size: var(--fs-small); margin-top: var(--sp-8); }
+.hl { font-family: var(--font-mono); color: var(--accent); }
+
+/* ============================================================
+   Athletics（内容清单 §9 + 骨架 #10）
+   ============================================================ */
+.athletics-grid { display: grid; grid-template-columns: 1fr; gap: var(--sp-32); }
+.athletics-text .big { font-family: var(--font-mono); font-size: var(--fs-h1); line-height: 1; color: var(--accent-warm); }
+.athletics-text .big .unit { font-size: var(--fs-h3); color: var(--text-muted); }
+.facts { margin-top: var(--sp-16); display: flex; flex-direction: column; gap: var(--sp-8); }
+.facts li { color: var(--text-secondary); font-size: var(--fs-small); padding-left: var(--sp-16); position: relative; }
+.facts li::before { content: ">"; position: absolute; left: 0; color: var(--accent); font-family: var(--font-mono); }
+.photo-grid { display: grid; grid-template-columns: 1fr; gap: var(--sp-16); }
+.photo-item { position: relative; }
+.photo-thumb { aspect-ratio: 1 / 1; width: 100%; border: 1px solid var(--border); border-radius: var(--radius-control); overflow: hidden; cursor: zoom-in; padding: 0; background: var(--bg-surface); box-shadow: var(--shadow-card); }
+.photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.photo-cap { font-family: var(--font-mono); font-size: var(--fs-label); color: var(--text-muted); margin-top: var(--sp-8); display: block; }
+
+/* ============================================================
+   Interests（内容清单 §10 + 骨架 #11）
+   ============================================================ */
+.interests-block { margin-top: var(--sp-48); }
+.interests-block h3 { margin-bottom: var(--sp-16); }
+.video-play {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  background: var(--base-45); border: none; display: flex; align-items: center; justify-content: center;
+}
+.video-play .play-icon {
+  width: 64px; height: 64px; border-radius: 50%;
+  border: 1.5px solid var(--accent); color: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 20px;
+}
+.video-play:hover .play-icon { border-color: var(--accent-bright); color: var(--accent-bright); }
+.video-play.hidden { display: none; }
+.video-banner { position: relative; aspect-ratio: 16 / 9; background: var(--bg-surface); border-bottom: 1px solid var(--border); }
+.video-banner video { width: 100%; height: 100%; object-fit: cover; background: var(--black); display: block; }
+.video-card { position: relative; aspect-ratio: 16 / 9; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-card); overflow: hidden; }
+.video-card video { width: 100%; height: 100%; object-fit: cover; background: var(--black); display: block; }
+
+/* ============================================================
+   Footer（内容清单 §11 + 骨架 #12）
+   ============================================================ */
+.footer { border-top: 1px solid var(--border); padding-block: var(--sp-48); text-align: center; }
+.footer p { color: var(--text-muted); font-size: var(--fs-caption); margin-top: var(--sp-8); }
+.footer-email { color: var(--accent); font-family: var(--font-mono); font-size: var(--fs-caption); }
+.footer-top { display: inline-block; margin-top: var(--sp-16); font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); }
+.footer-top:hover { color: var(--accent); }
+
+/* ============================================================
+   Lightbox 浮层（原生实现）
+   ============================================================ */
+.lightbox { position: fixed; inset: 0; z-index: 100; background: var(--overlay); display: none; align-items: center; justify-content: center; flex-direction: column; padding: var(--sp-24); }
+.lightbox.open { display: flex; }
+.lightbox-figure { max-width: min(920px, 92vw); max-height: 82vh; }
+.lightbox-img { max-width: 100%; max-height: 72vh; margin-inline: auto; background: var(--white); border: 8px solid var(--white); border-radius: var(--radius-control); box-shadow: var(--shadow-float); }
+.lightbox-cap { margin-top: var(--sp-16); text-align: center; }
+.lightbox-title { font-family: var(--font-mono); font-size: var(--fs-small); color: var(--text-primary); }
+.lightbox-sub { font-size: var(--fs-caption); color: var(--text-muted); margin-top: 4px; }
+.lightbox-close {
+  position: absolute; top: 20px; right: 24px; background: none; border: 1px solid var(--border-strong);
+  color: var(--text-primary); border-radius: var(--radius-control); padding: 8px 14px;
+  font-family: var(--font-mono); font-size: var(--fs-caption);
+}
+.lightbox-close:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ============================================================
+   响应式断点（PRD §5.3 + 设计规范 §4）
+   三档：max-width:767px（默认 mobile 单列） / 768–1439 平板 / min-width:1440 桌面
+   ============================================================ */
+
+/* ---- 平板 768–1439 ---- */
+@media (min-width: 768px) and (max-width: 1439px) {
+  .container { max-width: 688px; padding-inline: 0; }
+  .section { padding-block: var(--sp-64); }
+  h1 { font-size: 36px; }
+  h2 { font-size: 24px; }
+  .projects-grid { grid-template-columns: repeat(2, 1fr); }
+  .project-card:nth-child(3) { grid-column: span 2; }
+  .awards-grid { grid-template-columns: repeat(2, 1fr); }
+  .internship-grid { grid-template-columns: repeat(2, 1fr); }
+  .nums-strip { grid-template-columns: repeat(5, 1fr); gap: var(--sp-12); }
+  .photo-grid { grid-template-columns: repeat(2, 1fr); }
+  .curve-nodes { justify-content: space-between; }
+  .hero-grid { grid-template-columns: 1fr auto; align-items: center; }
+  .hero-copy { grid-column: 1; grid-row: 1; }
+  .hero-photo { grid-column: 2; grid-row: 1; justify-self: end; }
+  .hero-photo img { max-width: 240px; }
+}
+
+/* ---- 桌面 min-width:1440 ---- */
+@media (min-width: 1440px) {
+  .container { padding-inline: 0; }
+  .section { padding-block: var(--sp-96); }
+  .projects-grid { grid-template-columns: repeat(3, 1fr); }
+  .awards-grid { grid-template-columns: repeat(4, 1fr); }
+  .award-item:nth-child(9) { grid-column: 2; }
+  .award-item:nth-child(10) { grid-column: 3; }
+  .internship-grid { grid-template-columns: repeat(2, 1fr); }
+  .athletics-grid { grid-template-columns: 4fr 8fr; }
+  .photo-grid { grid-template-columns: repeat(4, 1fr); }
+  .research-item { display: grid; grid-template-columns: 220px 1fr; grid-template-areas: "meta body"; }
+  .research-meta { grid-area: meta; }
+  .research-body { grid-area: body; }
+  .hero-grid { grid-template-columns: 1fr auto; align-items: center; }
+  .hero-copy { grid-column: 1; grid-row: 1; }
+  .hero-photo { grid-column: 2; grid-row: 1; justify-self: end; }
+  .hero-photo img { max-width: 360px; }
+}
+
+/* ---- 移动端 max-width:767px（默认，这里显式收口导航与首屏） ---- */
+@media (max-width: 767px) {
+  h1 { font-size: 30px; }
+  h2 { font-size: 22px; }
+  .hero { padding-block: var(--sp-64); }
+  .hero-stats { grid-template-columns: 1fr; }
+  .nums-strip { grid-template-columns: 1fr 1fr; }
+  .nums-strip .num-card:last-child { grid-column: span 2; }
+  .hamburger { display: flex; }
+  .nav-links {
+    position: absolute; top: var(--nav-h); left: 0; right: 0;
+    flex-direction: column; align-items: flex-start; gap: 0;
+    background: var(--bg-elevated); border-bottom: 1px solid var(--border);
+    padding: var(--sp-8) 20px var(--sp-16); display: none;
+  }
+  .nav-links.open { display: flex; }
+  .nav-link { width: 100%; padding: var(--sp-12) 0; border-bottom: 1px solid var(--border); }
+  .nav-links .nav-lang { padding-top: var(--sp-12); }
+  .curve-nodes { flex-direction: column; gap: var(--sp-12); }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@tencent-ai/workbuddy-cloud-sdk@dev/lib/index.global.js"></script>
+<style>
+/* ===== 管理功能样式（登录 / 编辑 / 上传 / 图库）===== */
+.admin-link { display:inline-block; margin-top:var(--sp-8); background:none; border:none; padding:0; font-family:var(--font-mono); font-size:var(--fs-caption); color:var(--text-muted); cursor:pointer; }
+.admin-link:hover { color:var(--accent); }
+.modal-overlay { position:fixed; inset:0; background: var(--overlay); z-index:1000; display:none; align-items:center; justify-content:center; padding:var(--sp-16); }
+.modal-overlay.open { display:flex; }
+.modal { background:var(--bg-elevated); border:1px solid var(--border-strong); border-radius:var(--radius-card); padding:var(--sp-24); width:100%; max-width:440px; max-height:90vh; overflow:auto; box-shadow: var(--shadow-card); }
+.modal.wide { max-width:620px; }
+.modal h2 { font-family:var(--font-mono); font-size:var(--fs-h3); margin:0 0 var(--sp-16); color:var(--text-primary); }
+.field { margin-bottom:var(--sp-12); }
+.field label { display:block; font-size:var(--fs-caption); color:var(--text-secondary); margin-bottom:var(--sp-4); }
+.field input, .field textarea { width:100%; box-sizing:border-box; background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-control); color:var(--text-primary); padding:var(--sp-8) var(--sp-12); font-size:var(--fs-small); font-family:var(--font-sans); }
+.field textarea { min-height:72px; resize:vertical; }
+.modal .btn { width:100%; }
+.modal .hint { font-size:var(--fs-caption); color:var(--text-muted); margin-top:var(--sp-8); text-align:center; }
+.modal .err { color:var(--danger); font-size:var(--fs-caption); margin-top:var(--sp-8); min-height:1em; }
+.modal .link-btn { background:none; border:none; color:var(--accent); font-size:var(--fs-caption); cursor:pointer; padding:0; }
+.modal .row { display:flex; gap:var(--sp-8); }
+.modal .row .field { flex:1; }
+.modal hr { border:none; border-top:1px solid var(--border); margin:var(--sp-16) 0; }
+.gallery-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:var(--sp-16); }
+.gallery-item { background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-card); overflow:hidden; box-shadow: var(--shadow-card); }
+.gallery-item img { width:100%; aspect-ratio:4/3; object-fit:cover; display:block; }
+.gallery-item .gallery-cap { padding:var(--sp-12); font-size:var(--fs-caption); color:var(--text-secondary); }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- ============================================================
+     区块 0：导航栏 —— PRD §5.4（锚点导航+语言切换）
+     ============================================================ -->
+<nav class="nav" aria-label="Primary">
+  <div class="nav-inner container">
+    <a class="logo" href="#top"><span class="prompt">&gt;</span><span data-i18n="logo.name">Jaylen</span></a>
+    <button class="hamburger" type="button" aria-label="Menu" aria-expanded="false" id="hamburger">
+      <svg width="22" height="16" viewBox="0 0 22 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="1" y1="2" x2="21" y2="2"/><line x1="1" y1="8" x2="21" y2="8"/><line x1="1" y1="14" x2="21" y2="14"/></svg>
+    </button>
+    <div class="nav-links" id="navLinks">
+      <a class="nav-link" href="#interests" data-i18n="nav.interests">Interests</a>
+      <a class="nav-link" href="#about" data-i18n="nav.about">About</a>
+      <a class="nav-link" href="#projects" data-i18n="nav.projects">Projects</a>
+      <a class="nav-link" href="#research" data-i18n="nav.research">Research</a>
+      <a class="nav-link" href="#awards" data-i18n="nav.awards">Awards</a>
+      <a class="nav-link" href="#internship" data-i18n="nav.internship">Internship</a>
+      <a class="nav-link" href="#leadership" data-i18n="nav.leadership">Leadership</a>
+      <a class="nav-link" href="#athletics" data-i18n="nav.athletics">Athletics</a>
+      <div class="nav-lang">
+        <button class="lang-toggle" type="button" id="langToggle" aria-label="Switch language">
+          <span class="opt" data-lang="en">EN</span><span class="lang-sep">/</span><span class="opt" data-lang="zh">中文</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main id="main">
+
+<!-- ============================================================
+     区块 1：Interests —— 内容清单 §10（攀岩+电吉他）· 视觉开场
+     ============================================================ -->
+<section class="section section--opener" id="interests">
+  <!-- 电吉他视频：全宽横幅（开场视觉主体，不自动播放） -->
+  <div class="video-banner" data-video>
+    <video class="video-el" preload="none" src="电吉他.mp4" poster="电吉他-poster.jpg" playsinline></video>
+    <button class="video-play" type="button" aria-label="Play electric guitar video">
+      <span class="play-icon">▶</span>
+    </button>
+  </div>
+
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">01</span>
+      <h2 data-i18n="sec.interests">Interests</h2>
+    </div>
+
+    <div class="interests-block">
+      <h3 data-i18n="int.guitar.title">Electric Guitar</h3>
+      <p class="section-note" data-i18n="int.guitar.note">Click to play</p>
+    </div>
+
+    <div class="interests-block">
+      <h3 data-i18n="int.climb.title">Rock Climbing</h3>
+      <div class="photo-grid">
+        <figure class="photo-item">
+          <button class="photo-thumb" type="button" data-lightbox="攀岩1.jpg"><img src="攀岩1.jpg" alt="Rock climbing photo 1" loading="lazy"></button>
+          <figcaption class="photo-cap" data-i18n="int.climb.c1">Climbing · 1</figcaption>
+        </figure>
+        <figure class="photo-item">
+          <button class="photo-thumb" type="button" data-lightbox="攀岩2.jpg"><img src="攀岩2.jpg" alt="Rock climbing photo 2" loading="lazy"></button>
+          <figcaption class="photo-cap" data-i18n="int.climb.c2">Climbing · 2</figcaption>
+        </figure>
+        <figure class="photo-item">
+          <button class="photo-thumb" type="button" data-lightbox="攀岩3.jpg"><img src="攀岩3.jpg" alt="Rock climbing photo 3" loading="lazy"></button>
+          <figcaption class="photo-cap" data-i18n="int.climb.c3">Climbing · 3</figcaption>
+        </figure>
+        <figure class="photo-item">
+          <button class="photo-thumb" type="button" data-lightbox="攀岩4.jpg"><img src="攀岩4.jpg" alt="Rock climbing photo 4" loading="lazy"></button>
+          <figcaption class="photo-cap" data-i18n="int.climb.c4">Climbing · 4</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="interests-block">
+      <h3 data-i18n="int.basketball.title">Basketball</h3>
+      <div class="video-card" data-video>
+        <video class="video-el" preload="none" src="打篮球.mp4" poster="打篮球-poster.jpg" playsinline></video>
+        <button class="video-play" type="button" aria-label="Play basketball video">
+          <span class="play-icon">▶</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     区块 2：Hero 首屏 —— PRD §5.5 + 内容清单 §1
+     ============================================================ -->
+<header class="hero">
+  <div class="container hero-grid">
+    <div class="hero-photo">
+      <img src="近照.jpg" alt="Jaylen Xiong portrait" data-i18n-alt="hero.photo.alt" loading="lazy">
+    </div>
+    <div class="hero-copy">
+      <p class="hero-eyebrow" data-i18n="hero.eyebrow">// Personal Portfolio · Class of 2027</p>
+      <h1 class="hero-name"><span data-i18n="hero.name">Jaylen Xiong</span><span class="cursor">▌</span></h1>
+      <p class="hero-tagline" data-i18n="hero.tagline">Bridging engineering design and human choice.</p>
+      <p class="hero-school" data-i18n="hero.school">Guangdong Experimental High School · AP Division · Grade 12</p>
+      <div class="hero-stats">
+        <div class="stat-card"><span class="stat-value">3</span><span class="stat-label" data-i18n="hero.stat1.label">Projects</span></div>
+        <div class="stat-card"><span class="stat-value">2</span><span class="stat-label" data-i18n="hero.stat2.label">Papers</span></div>
+        <div class="stat-card"><span class="stat-value">10</span><span class="stat-label" data-i18n="hero.stat3.label">Awards</span></div>
+      </div>
+      <a class="btn hero-cta" href="#projects" data-i18n="hero.cta">View Work</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     区块 3：About —— PRD §4 + 内容清单 §2（U型成长曲线+关键数字）
+     ============================================================ -->
+<section class="section" id="about">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">02</span>
+      <h2 data-i18n="sec.about">About</h2>
+    </div>
+    <p class="about-intro" data-i18n="about.intro">I build hardware and software prototypes, investigate behavioral patterns, and turn real-world puzzles into measurable questions.</p>
+
+    <!-- 高光配图：省实代表队旗手 -->
+    <figure class="about-photo">
+      <button class="about-photo-thumb" type="button" data-lightbox="省实代表队旗手.jpg">
+        <img src="省实代表队旗手.jpg" alt="Flag bearer for Guangdong Experimental High School" data-i18n-alt="about.flag.alt" loading="lazy">
+      </button>
+      <figcaption class="about-photo-cap" data-i18n="about.flag.cap">Flag bearer for Guangdong Experimental High School</figcaption>
+    </figure>
+
+    <div class="about-block">
+      <h3 data-i18n="about.curve.title">Growth Curve</h3>
+      <svg class="curve" viewBox="0 0 320 140" preserveAspectRatio="none" role="img" aria-hidden="true">
+        <line x1="20" y1="130" x2="300" y2="130" stroke="var(--border)" stroke-width="1"/>
+        <polyline points="20,28 150,112 300,40" fill="none" stroke="var(--accent)" stroke-width="2"/>
+        <circle cx="20" cy="28" r="4" fill="var(--accent)"/>
+        <circle cx="150" cy="112" r="4" fill="var(--accent)"/>
+        <circle cx="300" cy="40" r="4" fill="var(--accent)"/>
+      </svg>
+      <div class="curve-nodes">
+        <div class="curve-node"><p class="n-title" data-i18n="about.n1">Grade 9 · All A's</p><p class="n-desc" data-i18n="about.n1.desc">Straight A's across the board.</p></div>
+        <div class="curve-node"><p class="n-title" data-i18n="about.n2">Grade 10 · Boarding dip</p><p class="n-desc" data-i18n="about.n2.desc">Adapting to boarding life, grades slipped.</p></div>
+        <div class="curve-node"><p class="n-title" data-i18n="about.n3">Grade 11 · Rebound</p><p class="n-desc" data-i18n="about.n3.desc">Built my own tools; grades recovered.</p></div>
+      </div>
+    </div>
+
+    <div class="about-block">
+      <h3 data-i18n="about.nums.title">Key Numbers</h3>
+      <div class="nums-strip">
+        <div class="num-card"><span class="num-value">3</span><span class="num-label" data-i18n="about.num1">Projects</span></div>
+        <div class="num-card"><span class="num-value">2</span><span class="num-label" data-i18n="about.num2">Papers</span></div>
+        <div class="num-card"><span class="num-value">10</span><span class="num-label" data-i18n="about.num3">Awards</span></div>
+        <div class="num-card"><span class="num-value">5</span><span class="num-label" data-i18n="about.num4">Years UNICEF</span></div>
+        <div class="num-card"><span class="num-value">192</span><span class="num-label" data-i18n="about.num5">cm</span></div>
+      </div>
+    </div>
+
+    <div class="about-block">
+      <h3 data-i18n="about.story.title">Why I Build</h3>
+      <!-- 示例内容，待替换 -->
+      <p class="about-story" data-i18n="about.story">When I boarded at school, I kept missing homework deadlines — no shared tracker existed for the assignments we juggled every week. So I built a homework-billing mini-app that logs, schedules, and settles every task, then shared it with my classmates. It cut my missed work to zero and reminded me that the best tools are the ones you build for a real problem you actually live with.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     区块 4：Projects —— PRD §5.6 + 内容清单 §3（三张项目卡片）
+     ============================================================ -->
+<section class="section" id="projects">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">03</span>
+      <h2 data-i18n="sec.projects">Projects</h2>
+    </div>
+    <div class="projects-grid">
+
+      <!-- 卡片1：UWB 自动跟随购物车 -->
+      <article class="project-card">
+        <div class="project-cover">
+          <img src="熊冠宇背景素材.files/熊冠宇背景素材1953.webp" alt="Nuremberg iENA Silver certificate" loading="lazy">
+        </div>
+        <div class="project-body">
+          <span class="tag" data-i18n="p1.tag">Hardware · iENA Silver</span>
+          <h3 class="project-title" data-i18n="p1.title">UWB Auto-Following Shopping Cart</h3>
+          <p class="project-desc" data-i18n="p1.desc">An UWB PDOA auto-following shopping cart for complex supermarket environments.</p>
+          <p class="project-meta" data-i18n="p1.meta">Nuremberg iENA Silver · Paper published · Team Tech Lead</p>
+          <div class="evidence">
+            <a href="跟随小车定稿.pdf" target="_blank" rel="noopener" data-i18n="p1.ev1">[PDF] Paper</a>
+            <button type="button" data-lightbox="熊冠宇背景素材.files/熊冠宇背景素材1953.webp" data-i18n="p1.ev2">[Cert] Award</button>
+          </div>
+          <p class="project-meta" data-i18n="p1.v1">Demo video</p>
+          <div class="video-card" data-video>
+            <video class="video-el" preload="none" src="跟随小车1.mp4" poster="跟随小车1-poster.jpg" playsinline></video>
+            <button class="video-play" type="button" aria-label="Play demo video"><span class="play-icon">▶</span></button>
+          </div>
+          <p class="project-meta" data-i18n="p1.v2">Explanation video</p>
+          <div class="video-card" data-video>
+            <video class="video-el" preload="none" src="跟随小车2.mp4" poster="跟随小车2-poster.jpg" playsinline></video>
+            <button class="video-play" type="button" aria-label="Play explanation video"><span class="play-icon">▶</span></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- 卡片2：作业账单小程序 -->
+      <article class="project-card">
+        <div class="project-cover">
+          <img src="homeworkBilling-1.png" alt="Homework Billing app interface screenshot" loading="lazy">
+        </div>
+        <div class="project-body">
+          <span class="tag" data-i18n="p2.tag">Software · Productivity</span>
+          <h3 class="project-title" data-i18n="p2.title">Homework Billing Mini-App</h3>
+          <p class="project-desc" data-i18n="p2.desc">A self-built tracker that logs every homework deadline and settles each assignment before it slips.</p>
+          <p class="project-meta" data-i18n="p2.meta">Self-built · Productivity</p>
+          <div class="evidence">
+            <button type="button" data-lightbox="homeworkBilling-1.png" data-i18n="p2.ev1">[Shot] Interface</button>
+            <button type="button" data-lightbox="homeworkBilling-2.png" data-i18n="p2.ev2">[Shot] Build process</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- 卡片3：银发适老「一键温暖」 -->
+      <article class="project-card">
+        <div class="project-cover">
+          <img src="社区服务-交互视频介绍2169.png" alt="Silver-hair inclusion interactive system screenshot" loading="lazy">
+        </div>
+        <div class="project-body">
+          <span class="tag" data-i18n="p3.tag">Web · Community Service</span>
+          <h3 class="project-title" data-i18n="p3.title">One-Tap Warmth — Senior Digital Inclusion</h3>
+          <p class="project-desc" data-i18n="p3.desc">An interactive branching-story system for senior citizens' digital barriers.</p>
+          <p class="project-meta" data-i18n="p3.meta">HTML5 / JS · Community Service</p>
+          <div class="evidence">
+            <a href="社区服务-交互视频介绍.htm" target="_blank" rel="noopener" data-i18n="p3.ev">Interactive Video Introduction</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     区块 5：Research —— PRD §5.7 + 内容清单 §4（两篇论文）
+     ============================================================ -->
+<section class="section" id="research">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">04</span>
+      <h2 data-i18n="sec.research">Research</h2>
+    </div>
+
+    <article class="research-item">
+      <div class="research-meta">
+        <span class="tag tag--success" data-i18n="r1.tag">Published</span>
+      </div>
+      <div class="research-body">
+        <h3 class="research-title" data-i18n="r1.title">Design of a UWB PDOA Auto-Following Shopping Cart System for Complex Supermarket Environments</h3>
+        <p class="research-venue" data-i18n="r1.venue">Published in Electronic Technology &amp; Software Engineering</p>
+        <!-- 示例内容，待替换 -->
+        <p class="research-abstract" data-i18n="r1.abstract">This paper presents an auto-following shopping cart designed for complex supermarket environments. The system uses Ultra-Wideband Phase Difference of Arrival (UWB PDOA) ranging and positioning to track a shopper in real time through aisles and crowds, reducing staff workload and smoothing the checkout flow. Field tests validated positioning accuracy and robustness in cluttered indoor scenes.</p>
+        <div class="evidence">
+          <a href="跟随小车定稿.pdf" target="_blank" rel="noopener" data-i18n="r1.action">View PDF</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="research-item">
+      <div class="research-meta">
+        <span class="tag" data-i18n="r2.tag">CCIR 2026</span>
+      </div>
+      <div class="research-body">
+        <h3 class="research-title" data-i18n="r2.title">Individual Valuation vs. Collective Preference: The K-pop Photocard Market as a Collective Trap</h3>
+        <p class="research-venue" data-i18n="r2.venue">2026 CCIR Summer Research Paper</p>
+        <!-- 示例内容，待替换 -->
+        <p class="research-abstract" data-i18n="r2.abstract">This paper examines the K-pop photocard market as a case where collective preference diverges from individual valuation. Using price, trading, and survey data, it argues that speculative dynamics can lock participants into a collectively suboptimal equilibrium, offering an empirical view of how markets amplify group behavior over individual rationality.</p>
+        <div class="evidence">
+          <a href="sa cankao.pdf" target="_blank" rel="noopener" data-i18n="r2.action">View PDF</a>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ============================================================
+     区块 6：Awards —— PRD §5.8 + 内容清单 §5（证书画廊）
+     ============================================================ -->
+<section class="section" id="awards">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">05</span>
+      <h2 data-i18n="sec.awards">Awards</h2>
+      <p class="section-note" data-i18n="awards.note">10 certificates · click to enlarge</p>
+    </div>
+    <div class="awards-grid">
+
+      <figure class="award-item">
+        <button class="award-thumb" type="button" data-lightbox="熊冠宇背景素材.files/熊冠宇背景素材1953.webp">
+          <img src="熊冠宇背景素材.files/熊冠宇背景素材1953.webp" alt="Nuremberg iENA Silver certificate" loading="lazy">
+        </button>
+        <figcaption class="award-cap">
+          <span class="tag" data-i18n="a1.tag">Global · Silver</span>
+          <h3 class="award-name" data-i18n="a1.title">Nuremberg iENA Silver</h3>
+          <span class="award-year">2025</span>
+        </figcaption>
+      </figure>
+
+      <figure class="award-item">
+        <button class="award-thumb" type="button" data-lightbox="熊冠宇背景素材.files/熊冠宇背景素材1904.webp">
+          <img src="熊冠宇背景素材.files/熊冠宇背景素材1904.webp" alt="SIC Best Strategy Report Bronze (Global) certificate" loading="lazy">
+        </button>
+        <figcaption class="award-cap">
+          <span class="tag" data-i18n="a2.tag">Strategy Report · Bronze</span>
+          <h3 class="award-name" data-i18n="a2.title">SIC Best Strategy Report Bronze (Global)</h3>
+          <span class="award-year">2026</span>
+        </figcaption>
+      </figure>
+
+      <figure class="award-item">
+        <button class="award-thumb" type="button" data-lightbox="熊冠宇背景素材.files/熊冠宇背景素材1919.webp">
+          <img src="熊冠宇背景素材.files/熊冠宇背景素材1919.webp" alt="SIC Overall Team Gold (Regional) certificate" loading="lazy">
+        </button>
+        <figcaption class="award-cap">
+          <span class="tag" data-i18n="a3.tag">Overall Team · Gold</span>
+          <h3 class="award-name" data-i18n="a3.title">SIC Overall Team Gold (Regional)</h3>
+          <span class="award-year">2026</span>
+        </figcaption>
+      </figure>
+
+      <figure class="award-item">
+        <button class="award-thumb" type="button" data-lightbox="熊冠宇背景素材.files/熊冠宇背景素材1934.webp">
+          <img src="熊冠宇背景素材.files/熊冠宇背景素材1934.webp" alt="SIC Best Stock Analysis Report Gold certificate" loading="lazy">
+        </button>
+        <figcaption class="award-cap">
+          <span class="tag" data-i18n="a4.tag">Regional · Team Gold</span>
+          <h3 class="award-name" data-i18n="a4.title">SIC Best Stock Analysis Report Gold</h3>
+          <span class="award-year">2026</span>
+        </figcaption>
+      </figure>
+
+      <figure class="award-item">
+        <button class="award-thumb" type="button" data-lightbox="熊冠宇背景素材.files/熊冠宇背景素材2042.webp">
+          <img src="熊冠宇背景素材.files/熊冠宇背景素材2042.webp" alt="ASOP Global Third Prize certificate" loading="lazy">
+        </button>
+        <figcaption class="award-cap">
+          <span class="tag" data-i18n="a5.tag">Global · Third Prize</span>
+          <h3 class="award-name" data-i18n="a5.title">ASOP Global Third Prize</h3>
+          <span class="award-year">2024</span>
+        </figcaption>
+      </figure>
+
+      <figure class="award-item">
+        <button class="award-thumb" type="button" data-lightbox="熊冠宇背景素材.files/熊冠宇背景素材1972.webp">
+          <img src="熊冠宇背景素材.files/熊冠宇背景素材1972.webp" alt="HiMCM H Award certificate" loading="lazy">
+        </button>
+        <figcaption class="award-cap">
+          <span class="tag" data-i18n="a6.tag">Honorable Mention</span>
+          <h3 class="award-name" data-i18n="a6.title">HiMCM H Award</h3>
+          <span class="award-year">2025</span>
+        </figcaption>
+      </figure>
+
+      <figure class="award-item">
+        <button class="award-thumb" type="button" data-lightbox="熊冠宇背景素材.files/熊冠宇背景素材1988.webp">
+          <img src="熊冠宇背景素材.files/熊冠宇背景素材1988.webp" alt="Cayley Contest Distinction certificate" loading="lazy">
+        </button>
+        <figcaption class="award-cap">
+          <span class="tag" data-i18n="a7.tag">Distinction</span>
+          <h3 class="award-name" data-i18n="a7.title">Cayley Contest Distinction</h3>
+          <span class="award-year">2025</span>
+        </figcaption>
+      </figure>
+
+      <figure class="award-item">
+        <button class="award-thumb" type="button" data-lightbox="熊冠宇背景素材.files/熊冠宇背景素材2023.webp">
+          <img src="熊冠宇背景素材.files/熊冠宇背景素材2023.webp" alt="UNICEF 5-year giving certificate" loading="lazy">
+        </button>
+        <figcaption class="award-cap">
+          <span class="tag" data-i18n="a8.tag">5 Years · ¥150/mo</span>
+          <h3 class="award-name" data-i18n="a8.title">UNICEF 5-Year Giving</h3>
+          <span class="award-year" data-i18n="awards.year.unicef">5-Year</span>
+        </figcaption>
+      </figure>
+
+      <figure class="award-item">
+        <button class="award-thumb" type="button" data-lightbox="熊冠宇背景素材.files/熊冠宇背景素材2059.webp">
+          <img src="熊冠宇背景素材.files/熊冠宇背景素材2059.webp" alt="Guangzhou javelin champion certificate" loading="lazy">
+        </button>
+        <figcaption class="award-cap">
+          <span class="tag" data-i18n="a9.tag">Middle School · 1st</span>
+          <h3 class="award-name" data-i18n="a9.title">Guangzhou Javelin Champion</h3>
+          <span class="award-year">2023</span>
+        </figcaption>
+      </figure>
+
+      <figure class="award-item">
+        <button class="award-thumb" type="button" data-lightbox="熊冠宇背景素材.files/熊冠宇背景素材2079.webp">
+          <img src="熊冠宇背景素材.files/熊冠宇背景素材2079.webp" alt="Environmental Engineering Club VP certificate" loading="lazy">
+        </button>
+        <figcaption class="award-cap">
+          <span class="tag" data-i18n="a10.tag">Leadership</span>
+          <h3 class="award-name" data-i18n="a10.title">Environmental Engineering Club VP</h3>
+          <span class="award-year">2025–26</span>
+        </figcaption>
+      </figure>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     区块 7：Internship —— 内容清单 §6（两份实习证明）
+     ============================================================ -->
+<section class="section" id="internship">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">06</span>
+      <h2 data-i18n="sec.internship">Internship</h2>
+    </div>
+    <div class="internship-grid">
+
+      <article class="internship-card">
+        <span class="tag" data-i18n="i1.tag">Private Equity · Quant</span>
+        <h3 class="internship-title" data-i18n="i1.title">Private Fund — Quantitative Research Intern</h3>
+        <!-- 占位：职责待补 -->
+        <p class="internship-duty" data-i18n="i1.duty">Assisted with quantitative analysis tasks at a private fund.</p>
+        <div class="evidence">
+          <a href="实习证明%20熊冠宇.pdf" target="_blank" rel="noopener" data-i18n="i1.action">View Certificate</a>
+        </div>
+      </article>
+
+      <article class="internship-card">
+        <span class="tag" data-i18n="i2.tag">ICBC · Due Diligence</span>
+        <h3 class="internship-title" data-i18n="i2.title">ICBC — Technology Due Diligence Intern</h3>
+        <!-- 占位：职责待补 -->
+        <p class="internship-duty" data-i18n="i2.duty">Supported technology due diligence research at ICBC.</p>
+        <div class="evidence">
+          <a href="实习证明2.pdf" target="_blank" rel="noopener" data-i18n="i2.action">View Certificate</a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     区块 8：Leadership & Service —— 内容清单 §8
+     ============================================================ -->
+<section class="section" id="leadership">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">07</span>
+      <h2 data-i18n="sec.leadership">Leadership &amp; Service</h2>
+    </div>
+    <div class="leadership-list">
+      <article class="leadership-item">
+        <span class="num">01</span>
+        <h3 data-i18n="l1.title">Environmental Engineering Club — Vice President</h3>
+        <!-- 示例内容，待替换 -->
+        <p data-i18n="l1.desc">Co-led the club's projects and operations.</p>
+      </article>
+      <article class="leadership-item">
+        <span class="num">02</span>
+        <h3 data-i18n="l2.title">UNICEF — 5-Year Monthly Donor</h3>
+        <p><span data-i18n="l2.desc.prefix">Monthly donor to UNICEF for 5 years since age 12</span> <span class="hl" data-i18n="l2.desc.hl">(¥150/month)</span></p>
+      </article>
+      <article class="leadership-item">
+        <span class="num">03</span>
+        <h3 data-i18n="l3.title">Community Elderly Care — Silver-Hair Inclusion</h3>
+        <p data-i18n="l3.desc">Built the One-Tap Warmth interactive branching-story system for seniors.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     区块 9：Athletics —— 内容清单 §9
+     ============================================================ -->
+<section class="section" id="athletics">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">08</span>
+      <h2 data-i18n="sec.athletics">Athletics</h2>
+    </div>
+    <div class="athletics-grid">
+      <div class="athletics-text">
+        <p class="big">192<span class="unit"> cm</span></p>
+        <ul class="facts">
+          <li data-i18n="ath.f1">Guangzhou Middle School Javelin — 1st</li>
+          <li data-i18n="ath.f2">Grade 9 Swimming — 3rd</li>
+          <li data-i18n="ath.f3">100m Sprint — 3rd</li>
+        </ul>
+      </div>
+      <div class="photo-grid">
+        <figure class="photo-item">
+          <button class="photo-thumb" type="button" data-lightbox="标枪1.jpg"><img src="标枪1.jpg" alt="Javelin practice photo 1" loading="lazy"></button>
+          <figcaption class="photo-cap" data-i18n="ath.p1">Javelin · 1</figcaption>
+        </figure>
+        <figure class="photo-item">
+          <button class="photo-thumb" type="button" data-lightbox="标枪2.jpg"><img src="标枪2.jpg" alt="Javelin practice photo 2" loading="lazy"></button>
+          <figcaption class="photo-cap" data-i18n="ath.p2">Javelin · 2</figcaption>
+        </figure>
+        <figure class="photo-item">
+          <button class="photo-thumb" type="button" data-lightbox="标枪3.jpg"><img src="标枪3.jpg" alt="Javelin practice photo 3" loading="lazy"></button>
+          <figcaption class="photo-cap" data-i18n="ath.p3">Javelin · 3</figcaption>
+        </figure>
+        <figure class="photo-item">
+          <button class="photo-thumb" type="button" data-lightbox="标枪4.jpg"><img src="标枪4.jpg" alt="Javelin practice photo 4" loading="lazy"></button>
+          <figcaption class="photo-cap" data-i18n="ath.p4">Javelin · 4</figcaption>
+        </figure>
+        <figure class="photo-item">
+          <button class="photo-thumb" type="button" data-lightbox="标枪5.jpg"><img src="标枪5.jpg" alt="Javelin practice photo 5" loading="lazy"></button>
+          <figcaption class="photo-cap" data-i18n="ath.p5">Javelin · 5</figcaption>
+        </figure>
+        <figure class="photo-item">
+          <button class="photo-thumb" type="button" data-lightbox="奖牌.jpg"><img src="奖牌.jpg" alt="Medal photo" loading="lazy"></button>
+          <figcaption class="photo-cap" data-i18n="ath.p6">Medal</figcaption>
+        </figure>
+        <figure class="photo-item">
+          <button class="photo-thumb" type="button" data-lightbox="奖杯.jpg"><img src="奖杯.jpg" alt="Trophy photo" loading="lazy"></button>
+          <figcaption class="photo-cap" data-i18n="ath.p7">Trophy</figcaption>
+        </figure>
+        <figure class="photo-item">
+          <button class="photo-thumb" type="button" data-lightbox="录取健将人物奖.jpg"><img src="录取健将人物奖.jpg" alt="Master Athlete Award ceremony photo" loading="lazy"></button>
+          <figcaption class="photo-cap" data-i18n="ath.p8">Master Athlete Award</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="gallery" hidden>
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">09</span>
+      <h2>Gallery · 图库</h2>
+    </div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================================================
+     区块 11：Footer —— 内容清单 §11
+     ============================================================ -->
+<footer class="footer">
+  <div class="container">
+    <p data-i18n="footer.copyright">© 2025 Jaylen Xiong. All rights reserved.</p>
+    <p><a class="footer-email" href="mailto:guanyuxiong@outlook.com" data-i18n="footer.email">guanyuxiong@outlook.com</a></p>
+    <a class="footer-top" href="#top" data-i18n="footer.top">Back to top</a>
+    <button class="admin-link" id="adminLoginLink" type="button">管理登录</button>
+  </div>
+</footer>
+
+<!-- 管理者登录弹窗 -->
+<div class="modal-overlay" id="loginOverlay">
+  <div class="modal">
+    <h2>管理者登录</h2>
+    <div id="loginForm">
+      <div class="field"><label>邮箱</label><input type="email" id="loginEmail" autocomplete="username" placeholder="admin@example.com"></div>
+      <div class="field"><label>密码</label><input type="password" id="loginPassword" autocomplete="current-password"></div>
+      <button class="btn" type="button" id="loginBtn">登录</button>
+      <p class="err" id="loginErr"></p>
+      <p class="hint"><button class="link-btn" type="button" id="showRegister">首次使用？注册管理员账号</button></p>
+    </div>
+    <div id="registerForm" hidden>
+      <div class="field"><label>邮箱</label><input type="email" id="regEmail" autocomplete="username"></div>
+      <div class="row">
+        <div class="field"><label>验证码</label><input id="regCode" inputmode="numeric" placeholder="邮件中的验证码"></div>
+        <div class="field"><label>&nbsp;</label><button class="btn" type="button" id="sendCodeBtn">获取验证码</button></div>
+      </div>
+      <div class="field"><label>设置密码</label><input type="password" id="regPassword" autocomplete="new-password"></div>
+      <button class="btn" type="button" id="registerBtn">注册并登录</button>
+      <p class="err" id="regErr"></p>
+      <p class="hint"><button class="link-btn" type="button" id="showLogin">已有账号？返回登录</button></p>
+    </div>
+    <p class="hint"><button class="link-btn" type="button" id="closeLogin">关闭</button></p>
+  </div>
+</div>
+
+<!-- 管理面板弹窗 -->
+<div class="modal-overlay" id="adminOverlay">
+  <div class="modal wide">
+    <h2>管理面板</h2>
+    <div class="field"><label>Slogan（英文）</label><textarea id="e_tagline_en"></textarea></div>
+    <div class="field"><label>Slogan（中文）</label><textarea id="e_tagline_zh"></textarea></div>
+    <div class="field"><label>Bio（英文）</label><textarea id="e_intro_en"></textarea></div>
+    <div class="field"><label>Bio（中文）</label><textarea id="e_intro_zh"></textarea></div>
+    <div class="field"><label>Why I Build（英文）</label><textarea id="e_story_en"></textarea></div>
+    <div class="field"><label>Why I Build（中文）</label><textarea id="e_story_zh"></textarea></div>
+    <button class="btn" type="button" id="saveContentBtn">保存文案</button>
+    <p class="err" id="saveErr"></p>
+    <hr>
+    <div class="field"><label>上传图片（显示在页面底部图库）</label><input type="file" id="uploadFile" accept="image/*"></div>
+    <div class="field"><label>图片说明（可选）</label><input id="uploadCaption" placeholder="说明文字"></div>
+    <button class="btn" type="button" id="uploadBtn">上传到网页</button>
+    <p class="err" id="uploadErr"></p>
+    <hr>
+    <button class="btn" type="button" id="logoutBtn">退出登录</button>
+  </div>
+</div>
+
+<!-- Lightbox 浮层 -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button class="lightbox-close" type="button" id="lightboxClose" data-i18n="lb.close">Close</button>
+  <figure class="lightbox-figure">
+    <img class="lightbox-img" id="lightboxImg" src="" alt="Enlarged image">
+    <figcaption class="lightbox-cap">
+      <p class="lightbox-title" id="lightboxTitle"></p>
+      <p class="lightbox-sub" id="lightboxSub"></p>
+    </figcaption>
+  </figure>
+</div>
+
+<script>
+/* ============================================================
+   中英双语数据字典（内容清单全量文案）
+   ============================================================ */
+const I18N = {
+  en: {
+    "site.title": "Jaylen Xiong — Engineering × Tech × Business",
+    "logo.name": "Jaylen",
+
+    "nav.about": "About", "nav.projects": "Projects", "nav.research": "Research",
+    "nav.awards": "Awards", "nav.internship": "Internship",
+    "nav.leadership": "Leadership", "nav.athletics": "Athletics", "nav.interests": "Interests",
+    "nav.menu": "Menu", "nav.menu.close": "Close menu",
+
+    "hero.eyebrow": "// Personal Portfolio · Class of 2027",
+    "hero.name": "Jaylen Xiong",
+    "hero.tagline": "Bridging engineering design and human choice.",
+    "hero.school": "Guangdong Experimental High School · AP Division · Grade 12",
+    "hero.stat1.label": "Projects", "hero.stat2.label": "Papers", "hero.stat3.label": "Awards",
+    "hero.cta": "View Work",
+    "hero.photo.alt": "Jaylen Xiong portrait",
+
+    "sec.about": "About",
+    "about.intro": "I build hardware and software prototypes, investigate behavioral patterns, and turn real-world puzzles into measurable questions.",
+    "about.flag.cap": "Flag bearer for Guangdong Experimental High School",
+    "about.flag.alt": "Flag bearer for Guangdong Experimental High School",
+    "about.curve.title": "Growth Curve",
+    "about.n1": "Grade 9 · All A's", "about.n1.desc": "Straight A's across the board.",
+    "about.n2": "Grade 10 · Boarding dip", "about.n2.desc": "Adapting to boarding life, grades slipped.",
+    "about.n3": "Grade 11 · Rebound", "about.n3.desc": "Built my own tools; grades recovered.",
+    "about.nums.title": "Key Numbers",
+    "about.num1": "Projects", "about.num2": "Papers", "about.num3": "Awards",
+    "about.num4": "Years UNICEF", "about.num5": "cm",
+    "about.story.title": "Why I Build",
+    "about.story": "When I boarded at school, I kept missing homework deadlines — no shared tracker existed for the assignments we juggled every week. So I built a homework-billing mini-app that logs, schedules, and settles every task, then shared it with my classmates. It cut my missed work to zero and reminded me that the best tools are the ones you build for a real problem you actually live with.",
+
+    "sec.projects": "Projects",
+    "p1.tag": "Hardware · iENA Silver",
+    "p1.title": "UWB Auto-Following Shopping Cart",
+    "p1.desc": "An UWB PDOA auto-following shopping cart for complex supermarket environments.",
+    "p1.meta": "Nuremberg iENA Silver · Paper published · Team Tech Lead",
+    "p1.ev1": "[PDF] Paper", "p1.ev2": "[Cert] Award", "p1.v1": "Demo video", "p1.v2": "Explanation video",
+    "p2.tag": "Software · Productivity",
+    "p2.title": "Homework Billing Mini-App",
+    "p2.desc": "A self-built tracker that logs every homework deadline and settles each assignment before it slips.",
+    "p2.meta": "Self-built · Productivity",
+    "p2.ev1": "[Shot] Interface", "p2.ev2": "[Shot] Build process",
+    "p3.tag": "Web · Community Service",
+    "p3.title": "One-Tap Warmth — Senior Digital Inclusion",
+    "p3.desc": "An interactive branching-story system for senior citizens' digital barriers.",
+    "p3.meta": "HTML5 / JS · Community Service",
+    "p3.ev": "Interactive Video Introduction",
+
+    "sec.research": "Research",
+    "r1.tag": "Published",
+    "r1.title": "Design of a UWB PDOA Auto-Following Shopping Cart System for Complex Supermarket Environments",
+    "r1.venue": "Published in Electronic Technology & Software Engineering",
+    "r1.abstract": "This paper presents an auto-following shopping cart designed for complex supermarket environments. The system uses Ultra-Wideband Phase Difference of Arrival (UWB PDOA) ranging and positioning to track a shopper in real time through aisles and crowds, reducing staff workload and smoothing the checkout flow. Field tests validated positioning accuracy and robustness in cluttered indoor scenes.",
+    "r1.action": "View PDF",
+    "r2.tag": "CCIR 2026",
+    "r2.title": "Individual Valuation vs. Collective Preference: The K-pop Photocard Market as a Collective Trap",
+    "r2.venue": "2026 CCIR Summer Research Paper",
+    "r2.abstract": "This paper examines the K-pop photocard market as a case where collective preference diverges from individual valuation. Using price, trading, and survey data, it argues that speculative dynamics can lock participants into a collectively suboptimal equilibrium, offering an empirical view of how markets amplify group behavior over individual rationality.",
+    "r2.action": "View PDF",
+
+    "sec.awards": "Awards",
+    "awards.note": "10 certificates · click to enlarge",
+    "awards.year.unicef": "5-Year",
+    "a1.tag": "Global · Silver", "a1.title": "Nuremberg iENA Silver",
+    "a2.tag": "Strategy Report · Bronze", "a2.title": "SIC Best Strategy Report Bronze (Global)",
+    "a3.tag": "Overall Team · Gold", "a3.title": "SIC Overall Team Gold (Regional)",
+    "a4.tag": "Regional · Team Gold", "a4.title": "SIC Best Stock Analysis Report Gold",
+    "a5.tag": "Global · Third Prize", "a5.title": "ASOP Global Third Prize",
+    "a6.tag": "Honorable Mention", "a6.title": "HiMCM H Award",
+    "a7.tag": "Distinction", "a7.title": "Cayley Contest Distinction",
+    "a8.tag": "5 Years · ¥150/mo", "a8.title": "UNICEF 5-Year Giving",
+    "a9.tag": "Middle School · 1st", "a9.title": "Guangzhou Javelin Champion",
+    "a10.tag": "Leadership", "a10.title": "Environmental Engineering Club VP",
+
+    "sec.internship": "Internship",
+    "i1.tag": "Private Equity · Quant", "i1.title": "Private Fund — Quantitative Research Intern",
+    "i1.duty": "Assisted with quantitative analysis tasks at a private fund.", "i1.action": "View Certificate",
+    "i2.tag": "ICBC · Due Diligence", "i2.title": "ICBC — Technology Due Diligence Intern",
+    "i2.duty": "Supported technology due diligence research at ICBC.", "i2.action": "View Certificate",
+
+    "sec.leadership": "Leadership & Service",
+    "l1.title": "Environmental Engineering Club — Vice President",
+    "l1.desc": "Co-led the club's projects and operations.",
+    "l2.title": "UNICEF — 5-Year Monthly Donor",
+    "l2.desc.prefix": "Monthly donor to UNICEF for 5 years since age 12",
+    "l2.desc.hl": "(¥150/month).",
+    "l3.title": "Community Elderly Care — Silver-Hair Inclusion",
+    "l3.desc": "Built the One-Tap Warmth interactive branching-story system for seniors.",
+
+    "sec.athletics": "Athletics",
+    "ath.f1": "Guangzhou Middle School Javelin — 1st",
+    "ath.f2": "Grade 9 Swimming — 3rd",
+    "ath.f3": "100m Sprint — 3rd",
+    "ath.p1": "Javelin · 1", "ath.p2": "Javelin · 2", "ath.p3": "Javelin · 3",
+    "ath.p4": "Javelin · 4", "ath.p5": "Javelin · 5", "ath.p6": "Medal", "ath.p7": "Trophy", "ath.p8": "Master Athlete Award",
+
+    "sec.interests": "Interests",
+    "int.climb.title": "Rock Climbing",
+    "int.climb.c1": "Climbing · 1", "int.climb.c2": "Climbing · 2", "int.climb.c3": "Climbing · 3", "int.climb.c4": "Climbing · 4",
+    "int.guitar.title": "Electric Guitar",
+    "int.guitar.note": "Click to play",
+    "int.basketball.title": "Basketball",
+
+    "footer.copyright": "© 2025 Jaylen Xiong. All rights reserved.",
+    "footer.email": "guanyuxiong@outlook.com",
+    "footer.top": "Back to top",
+    "lb.close": "Close"
+  },
+  zh: {
+    "site.title": "熊冠宇 — 工程 × 科技 × 商业",
+    "logo.name": "熊冠宇",
+
+    "nav.about": "关于我", "nav.projects": "项目", "nav.research": "论文",
+    "nav.awards": "奖项", "nav.internship": "实习",
+    "nav.leadership": "领导力与公益", "nav.athletics": "体育", "nav.interests": "爱好",
+    "nav.menu": "菜单", "nav.menu.close": "关闭菜单",
+
+    "hero.eyebrow": "// 个人作品集 · 2027 届",
+    "hero.name": "熊冠宇",
+    "hero.tagline": "连接工程设计与人的选择。",
+    "hero.school": "广东省实验中学 AP 国际部 · 12 年级",
+    "hero.stat1.label": "个项目", "hero.stat2.label": "篇论文", "hero.stat3.label": "项奖项",
+    "hero.cta": "查看作品",
+    "hero.photo.alt": "熊冠宇近照",
+
+    "sec.about": "关于我",
+    "about.intro": "我搭建硬件与软件原型、探究行为模式，把现实难题转化为可度量的问题。",
+    "about.flag.cap": "省实代表队旗手",
+    "about.flag.alt": "省实代表队旗手",
+    "about.curve.title": "成长曲线",
+    "about.n1": "初三 · 全 A", "about.n1.desc": "各科全 A，起点扎实。",
+    "about.n2": "高一 · 寄宿适应期下滑", "about.n2.desc": "适应寄宿生活，成绩一度下滑。",
+    "about.n3": "高二 · 自研工具回升", "about.n3.desc": "自研工具后成绩回升。",
+    "about.nums.title": "关键数字",
+    "about.num1": "个项目", "about.num2": "篇论文", "about.num3": "项奖项",
+    "about.num4": "年公益", "about.num5": "cm",
+    "about.story.title": "我为什么动手做",
+    "about.story": "寄宿后我经常漏交作业——因为缺少一个能追踪每周作业清单的工具。于是我自研了一款「作业账单」小程序，记录、排期并结清每一份作业，还分享给同学使用。它让我的漏交归零，也让我明白：最好的工具，是为自己真实困境亲手打造的那一个。",
+
+    "sec.projects": "项目作品",
+    "p1.tag": "硬件 · 纽伦堡银奖",
+    "p1.title": "UWB 自动跟随购物车",
+    "p1.desc": "面向商超复杂环境的 UWB PDOA 自动跟随购物车。",
+    "p1.meta": "纽伦堡发明展全球银奖 · 论文已发表 · 团队技术负责人",
+    "p1.ev1": "[PDF] 论文", "p1.ev2": "[证书] 奖项", "p1.v1": "演示视频", "p1.v2": "讲解视频",
+    "p2.tag": "软件 · 效率",
+    "p2.title": "作业账单小程序",
+    "p2.desc": "自研的作业追踪工具，记录每项作业截止时间，在漏交前逐一结清。",
+    "p2.meta": "自研 · 效率工具",
+    "p2.ev1": "[截图] 界面", "p2.ev2": "[截图] 制作过程",
+    "p3.tag": "网页 · 社区服务",
+    "p3.title": "银发适老「一键温暖」",
+    "p3.desc": "为长者数字鸿沟打造的交互式分支剧情系统。",
+    "p3.meta": "HTML5 / JS · 社区服务",
+    "p3.ev": "交互视频介绍",
+
+    "sec.research": "论文",
+    "r1.tag": "已发表",
+    "r1.title": "基于 UWB PDOA 的商超复杂环境下自动跟随购物车系统设计",
+    "r1.venue": "发表于《电子技术与软件工程》",
+    "r1.abstract": "本文针对商超复杂环境设计了一款自动跟随购物车。系统采用超宽带相位差（UWB PDOA）测距与定位技术，在货架与人群密集的通道中实时追踪购物者，降低人力并优化结算流程。实测验证了系统在杂乱室内场景下的定位精度与鲁棒性。",
+    "r1.action": "查看 PDF",
+    "r2.tag": "CCIR 2026",
+    "r2.title": "个体估值与集体偏好相悖：K-pop 小卡市场作为集体陷阱的实证分析",
+    "r2.venue": "2026 CCIR 夏校论文",
+    "r2.abstract": "本文以 K-pop 小卡市场为案例，研究集体偏好与个体估值相悖的现象。基于价格、交易与问卷数据，论文论证投机性动态可能将参与者锁定于集体次优均衡，为「市场放大群体行为、偏离个体理性」的机制提供实证视角。",
+    "r2.action": "查看 PDF",
+
+    "sec.awards": "奖项",
+    "awards.note": "10 张证书 · 点击放大",
+    "awards.year.unicef": "5 周年",
+    "a1.tag": "全球 · 银奖", "a1.title": "纽伦堡发明展全球银奖",
+    "a2.tag": "策略报告 · 铜奖", "a2.title": "SIC 最佳策略报告铜奖（全球赛）",
+    "a3.tag": "团队总分 · 金奖", "a3.title": "SIC 团队总分金奖（区域赛）",
+    "a4.tag": "区域赛 · 团队金奖", "a4.title": "SIC 最佳股票分析报告团队金奖",
+    "a5.tag": "全球 · 三等奖", "a5.title": "ASOP 全球三等奖",
+    "a6.tag": "优胜奖", "a6.title": "HiMCM H 奖",
+    "a7.tag": "荣誉", "a7.title": "Cayley 竞赛 Distinction",
+    "a8.tag": "5 年 · 月捐 150 元", "a8.title": "UNICEF 5 年捐赠",
+    "a9.tag": "初中 · 第一", "a9.title": "广州初中标枪第一",
+    "a10.tag": "领导力", "a10.title": "环境工程社副社长",
+
+    "sec.internship": "实习",
+    "i1.tag": "私募 · 量化", "i1.title": "私募基金 — 量化研究实习",
+    "i1.duty": "协助私募基金完成量化分析相关工作。", "i1.action": "查看证明",
+    "i2.tag": "工商银行 · 尽调", "i2.title": "工商银行 — 科创尽调实习",
+    "i2.duty": "支持工商银行科创尽调研究工作。", "i2.action": "查看证明",
+
+    "sec.leadership": "领导力与公益",
+    "l1.title": "环境工程社 — 副社长",
+    "l1.desc": "共同负责社团项目与运营。",
+    "l2.title": "UNICEF — 5 年月捐",
+    "l2.desc.prefix": "12 岁起月捐 UNICEF，已持续 5 年",
+    "l2.desc.hl": "（¥150/月）",
+    "l3.title": "社区助老 — 银发适老",
+    "l3.desc": "为长者打造「一键温暖」交互式分支剧情系统。",
+
+    "sec.athletics": "体育",
+    "ath.f1": "广州初中标枪 — 第一",
+    "ath.f2": "9 年级游泳 — 校第三",
+    "ath.f3": "百米 — 校第三",
+    "ath.p1": "标枪 · 1", "ath.p2": "标枪 · 2", "ath.p3": "标枪 · 3",
+    "ath.p4": "标枪 · 4", "ath.p5": "标枪 · 5", "ath.p6": "奖牌", "ath.p7": "奖杯", "ath.p8": "健将人物奖",
+
+    "sec.interests": "爱好",
+    "int.climb.title": "攀岩",
+    "int.climb.c1": "攀岩 · 1", "int.climb.c2": "攀岩 · 2", "int.climb.c3": "攀岩 · 3", "int.climb.c4": "攀岩 · 4",
+    "int.guitar.title": "电吉他",
+    "int.guitar.note": "点击播放",
+    "int.basketball.title": "打篮球",
+
+    "footer.copyright": "© 2025 熊冠宇. 保留所有权利。",
+    "footer.email": "guanyuxiong@outlook.com",
+    "footer.top": "回到顶部",
+    "lb.close": "关闭"
+  }
+};
+
+let currentLang = 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+  document.body.classList.toggle('lang-zh', lang === 'zh');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const val = I18N[lang][key];
+    if (val !== undefined) el.textContent = val;
+  });
+  document.querySelectorAll('[data-i18n-alt]').forEach(el => {
+    const key = el.getAttribute('data-i18n-alt');
+    const val = I18N[lang][key];
+    if (val !== undefined) el.setAttribute('alt', val);
+  });
+  document.title = I18N[lang]['site.title'];
+  // 语言切换按钮激活态
+  document.querySelectorAll('.lang-toggle .opt').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('data-lang') === lang);
+  });
+  updateHamburgerLabel();
+}
+
+// 语言切换（保持滚动位置，DOM 结构不变）
+document.getElementById('langToggle').addEventListener('click', () => {
+  applyLang(currentLang === 'en' ? 'zh' : 'en');
+});
+
+// 汉堡菜单
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('navLinks');
+function updateHamburgerLabel() {
+  const open = navLinks.classList.contains('open');
+  hamburger.setAttribute('aria-label', I18N[currentLang][open ? 'nav.menu.close' : 'nav.menu']);
+}
+hamburger.addEventListener('click', () => {
+  const open = navLinks.classList.toggle('open');
+  hamburger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  updateHamburgerLabel();
+});
+navLinks.querySelectorAll('.nav-link').forEach(a => {
+  a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    updateHamburgerLabel();
+  });
+});
+
+// Scroll-spy：高亮当前模块（PRD §5.4）
+const sections = document.querySelectorAll('main section[id], header.hero');
+const navLinkEls = document.querySelectorAll('.nav-link');
+const spy = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinkEls.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+sections.forEach(s => spy.observe(s));
+
+// Lightbox（原生实现，PRD §5.8）
+const lightbox = document.getElementById('lightbox');
+const lbImg = document.getElementById('lightboxImg');
+const lbTitle = document.getElementById('lightboxTitle');
+const lbSub = document.getElementById('lightboxSub');
+
+function openLightbox(src, title, sub) {
+  lbImg.src = src;
+  lbImg.alt = title || 'Enlarged image';
+  lbTitle.textContent = title || '';
+  lbSub.textContent = sub || '';
+  lightbox.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  lightbox.classList.remove('open');
+  lbImg.src = '';
+  document.body.style.overflow = '';
+}
+document.querySelectorAll('[data-lightbox]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const fig = btn.closest('figure');
+    const titleEl = fig ? fig.querySelector('.award-name') : null;
+    const yearEl = fig ? fig.querySelector('.award-year') : null;
+    openLightbox(btn.getAttribute('data-lightbox'), titleEl ? titleEl.textContent : '', yearEl ? yearEl.textContent : '');
+  });
+});
+document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+// 视频点击播放（不自动播放，PRD §5.9）
+document.querySelectorAll('[data-video]').forEach(wrap => {
+  const video = wrap.querySelector('video');
+  const playBtn = wrap.querySelector('.video-play');
+  wrap.addEventListener('click', () => {
+    if (video.paused) { video.play(); playBtn.classList.add('hidden'); }
+    else { video.pause(); playBtn.classList.remove('hidden'); }
+  });
+  video.addEventListener('ended', () => playBtn.classList.remove('hidden'));
+});
+
+/* ===================== 管理者功能（云服务：登录 / 编辑文案 / 上传图片） ===================== */
+const PUBLIC_CONFIG = {
+  endpoint: "https://jaylen-portfolio.app.workbuddy.host",
+  oauthRelayBaseUrl: "https://www.workbuddy.cn/v2/as/genie-baas/oauth",
+  publishableKey: "wbpk_G7rGAkRywxwyhlkLtO5ngu_RNI98Plbp0lPkvJhDT57tXfzt9QjOy5K",
+};
+let cloud = null;
+let pendingReg = null;
+if (window.WorkBuddyCloud) cloud = WorkBuddyCloud.createWorkBuddyCloud(PUBLIC_CONFIG);
+
+const el = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+function openLogin() { el('loginOverlay').classList.add('open'); el('loginErr').textContent = ''; }
+function closeLogin() { el('loginOverlay').classList.remove('open'); }
+
+async function doLogin() {
+  if (!cloud) { el('loginErr').textContent = '云服务未就绪，请先发布网站后再登录'; return; }
+  const email = el('loginEmail').value.trim();
+  const password = el('loginPassword').value;
+  if (!email || !password) { el('loginErr').textContent = '请输入邮箱和密码'; return; }
+  const { error } = await cloud.auth.signInWithPassword({ email, password });
+  if (error) { el('loginErr').textContent = '登录失败：' + (error.message || '账号或密码错误'); return; }
+  closeLogin();
+  await openAdminPanel();
+}
+
+async function sendCode() {
+  if (!cloud) return;
+  const email = el('regEmail').value.trim();
+  if (!email) { el('regErr').textContent = '请输入邮箱'; return; }
+  const { data, error } = await cloud.auth.sendOtp({ email });
+  if (error) { el('regErr').textContent = '发送失败：' + error.message; return; }
+  pendingReg = { email, verificationId: data.verificationId, isExistingUser: data.isExistingUser };
+  el('regErr').textContent = '验证码已发送，请查收邮件';
+}
+
+async function doRegister() {
+  if (!cloud) return;
+  const email = el('regEmail').value.trim();
+  const code = el('regCode').value.trim();
+  const password = el('regPassword').value;
+  if (!pendingReg || pendingReg.email !== email) { el('regErr').textContent = '请先获取验证码'; return; }
+  if (!code || !password) { el('regErr').textContent = '请输入验证码和密码'; return; }
+  const { error } = await cloud.auth.verifyOtp({
+    email,
+    verificationId: pendingReg.verificationId,
+    isExistingUser: pendingReg.isExistingUser,
+    token: code,
+    password: pendingReg.isExistingUser ? undefined : password,
+  });
+  if (error) { el('regErr').textContent = '注册失败：' + error.message; return; }
+  pendingReg = null;
+  closeLogin();
+  await openAdminPanel();
+}
+
+async function openAdminPanel() {
+  if (!cloud) { openLogin(); return; }
+  const { data: session, error } = await cloud.auth.getSession();
+  if (error || !session) { openLogin(); return; }
+  await loadContentIntoForm();
+  el('adminOverlay').classList.add('open');
+}
+
+async function loadContentIntoForm() {
+  const { data } = await cloud.database.from('site_content').select('*');
+  const m = {};
+  if (data) data.forEach(r => { m[r.content_key] = r.content_value; });
+  el('e_tagline_en').value = m['hero.tagline.en'] || I18N.en['hero.tagline'];
+  el('e_tagline_zh').value = m['hero.tagline.zh'] || I18N.zh['hero.tagline'];
+  el('e_intro_en').value = m['about.intro.en'] || I18N.en['about.intro'];
+  el('e_intro_zh').value = m['about.intro.zh'] || I18N.zh['about.intro'];
+  el('e_story_en').value = m['about.story.en'] || I18N.en['about.story'];
+  el('e_story_zh').value = m['about.story.zh'] || I18N.zh['about.story'];
+}
+
+async function saveContent() {
+  const rows = [
+    { content_key: 'hero.tagline.en', content_value: el('e_tagline_en').value },
+    { content_key: 'hero.tagline.zh', content_value: el('e_tagline_zh').value },
+    { content_key: 'about.intro.en', content_value: el('e_intro_en').value },
+    { content_key: 'about.intro.zh', content_value: el('e_intro_zh').value },
+    { content_key: 'about.story.en', content_value: el('e_story_en').value },
+    { content_key: 'about.story.zh', content_value: el('e_story_zh').value },
+  ];
+  let errMsg = null;
+  for (const r of rows) {
+    const { error } = await cloud.database.from('site_content').upsert(r);
+    if (error) errMsg = error.message;
+  }
+  if (errMsg) { el('saveErr').textContent = '保存失败：' + errMsg; return; }
+  el('saveErr').textContent = '已保存 ✓';
+  await loadEditableContent();
+}
+
+function resizeImage(file, maxDim, quality) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      let w = img.width, h = img.height;
+      if (Math.max(w, h) > maxDim) { const r = maxDim / Math.max(w, h); w = Math.round(w * r); h = Math.round(h * r); }
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      resolve(c.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('图片读取失败')); };
+    img.src = url;
+  });
+}
+
+async function uploadImage() {
+  if (!cloud) { el('uploadErr').textContent = '请先登录'; return; }
+  const file = el('uploadFile').files[0];
+  if (!file) { el('uploadErr').textContent = '请先选择图片'; return; }
+  const caption = el('uploadCaption').value.trim();
+  let dataUrl;
+  try { dataUrl = await resizeImage(file, 1200, 0.82); }
+  catch (e) { el('uploadErr').textContent = e.message; return; }
+  const { error } = await cloud.database.from('gallery_items').insert({ url: dataUrl, caption: caption || null });
+  if (error) { el('uploadErr').textContent = '上传失败：' + error.message; return; }
+  el('uploadFile').value = '';
+  el('uploadCaption').value = '';
+  el('uploadErr').textContent = '上传成功 ✓';
+  await loadGallery();
+}
+
+async function loadGallery() {
+  if (!cloud) return;
+  const { data, error } = await cloud.database.from('gallery_items').select('*').order('created_at', { ascending: false });
+  const section = el('gallery');
+  const grid = el('galleryGrid');
+  if (error || !data || data.length === 0) { section.hidden = true; grid.innerHTML = ''; return; }
+  section.hidden = false;
+  grid.innerHTML = data.map(it => {
+    const cap = it.caption ? '<div class="gallery-cap">' + esc(it.caption) + '</div>' : '';
+    return '<div class="gallery-item"><img src="' + esc(it.url) + '" alt="' + esc(it.caption || 'gallery') + '" loading="lazy">' + cap + '</div>';
+  }).join('');
+}
+
+async function loadEditableContent() {
+  if (!cloud) return;
+  const { data } = await cloud.database.from('site_content').select('*');
+  if (!data) return;
+  const keyMap = {
+    'hero.tagline.en': ['en', 'hero.tagline'],
+    'hero.tagline.zh': ['zh', 'hero.tagline'],
+    'about.intro.en': ['en', 'about.intro'],
+    'about.intro.zh': ['zh', 'about.intro'],
+    'about.story.en': ['en', 'about.story'],
+    'about.story.zh': ['zh', 'about.story'],
+  };
+  data.forEach(r => {
+    const m = keyMap[r.content_key];
+    if (m && r.content_value) I18N[m[0]][m[1]] = r.content_value;
+  });
+  applyLang(currentLang);
+}
+
+el('adminLoginLink').addEventListener('click', openLogin);
+el('closeLogin').addEventListener('click', closeLogin);
+el('showRegister').addEventListener('click', () => { el('loginForm').hidden = true; el('registerForm').hidden = false; el('loginErr').textContent = ''; });
+el('showLogin').addEventListener('click', () => { el('loginForm').hidden = false; el('registerForm').hidden = true; el('regErr').textContent = ''; });
+el('loginBtn').addEventListener('click', doLogin);
+el('sendCodeBtn').addEventListener('click', sendCode);
+el('registerBtn').addEventListener('click', doRegister);
+el('saveContentBtn').addEventListener('click', saveContent);
+el('uploadBtn').addEventListener('click', uploadImage);
+el('logoutBtn').addEventListener('click', async () => { if (cloud) await cloud.auth.signOut(); el('adminOverlay').classList.remove('open'); });
+[el('loginOverlay'), el('adminOverlay')].forEach(ov => ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('open'); }));
+
+(async function initAdmin() {
+  if (!cloud) return;
+  try { await loadEditableContent(); await loadGallery(); } catch (e) { /* 未发布或未联网时静默 */ }
+})();
+
+// 初始化：默认英文
+applyLang('en');
+</script>
+</body>
+</html>
