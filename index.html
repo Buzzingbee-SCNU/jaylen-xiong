@@ -141,7 +141,7 @@ h3 { font-size: var(--fs-h3); line-height: var(--lh-h3); font-weight: 500; }
   background: var(--bg-base);
   border-bottom: 1px solid var(--border);
 }
-.nav-inner { display: flex; align-items: center; justify-content: space-between; height: 100%; }
+.nav-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-48); height: 100%; }
 .logo {
   font-family: var(--font-mono); font-weight: 600; font-size: var(--fs-body);
   color: var(--text-primary);
@@ -476,6 +476,8 @@ h3 { font-size: var(--fs-h3); line-height: var(--lh-h3); font-weight: 500; }
 .gallery-item { background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-card); overflow:hidden; box-shadow: var(--shadow-card); }
 .gallery-item img { width:100%; aspect-ratio:4/3; object-fit:cover; display:block; }
 .gallery-item .gallery-cap { padding:var(--sp-12); font-size:var(--fs-caption); color:var(--text-secondary); }
+.project-shot { margin-top: var(--sp-16); }
+.project-shot img { width: 100%; border: 1px solid var(--border); border-radius: var(--radius-control); display: block; }
 </style>
 </head>
 <body>
@@ -685,16 +687,18 @@ h3 { font-size: var(--fs-h3); line-height: var(--lh-h3); font-weight: 500; }
       <!-- 卡片2：作业账单小程序 -->
       <article class="project-card">
         <div class="project-cover">
-          <img src="homeworkBilling-1.png" alt="Homework Billing app interface screenshot" loading="lazy">
+          <img src="homeworkBilling1.png" alt="Homework Billing app interface screenshot" loading="lazy">
         </div>
         <div class="project-body">
           <span class="tag" data-i18n="p2.tag">Software · Productivity</span>
           <h3 class="project-title" data-i18n="p2.title">Homework Billing Mini-App</h3>
           <p class="project-desc" data-i18n="p2.desc">A self-built tracker that logs every homework deadline and settles each assignment before it slips.</p>
+          <div class="project-shot">
+            <img src="homeworkBilling2.png" alt="Homework Billing app screenshot" loading="lazy">
+          </div>
           <p class="project-meta" data-i18n="p2.meta">Self-built · Productivity</p>
           <div class="evidence">
-            <button type="button" data-lightbox="homeworkBilling-1.png" data-i18n="p2.ev1">[Shot] Interface</button>
-            <button type="button" data-lightbox="homeworkBilling-2.png" data-i18n="p2.ev2">[Shot] Build process</button>
+            <button type="button" data-lightbox="homeworkBilling2.png" data-i18n="p2.ev2">[Shot] Database structure</button>
           </div>
         </div>
       </article>
@@ -1138,7 +1142,7 @@ const I18N = {
     "p2.title": "Homework Billing Mini-App",
     "p2.desc": "A self-built tracker that logs every homework deadline and settles each assignment before it slips.",
     "p2.meta": "Self-built · Productivity",
-    "p2.ev1": "[Shot] Interface", "p2.ev2": "[Shot] Build process",
+    "p2.ev2": "[Shot] Database structure",
     "p3.tag": "Web · Community Service",
     "p3.title": "One-Tap Warmth — Senior Digital Inclusion",
     "p3.desc": "An interactive branching-story system for senior citizens' digital barriers.",
@@ -1246,7 +1250,7 @@ const I18N = {
     "p2.title": "作业账单小程序",
     "p2.desc": "自研的作业追踪工具，记录每项作业截止时间，在漏交前逐一结清。",
     "p2.meta": "自研 · 效率工具",
-    "p2.ev1": "[截图] 界面", "p2.ev2": "[截图] 制作过程",
+    "p2.ev2": "[截图] 数据库结构",
     "p3.tag": "网页 · 社区服务",
     "p3.title": "银发适老「一键温暖」",
     "p3.desc": "为长者数字鸿沟打造的交互式分支剧情系统。",
